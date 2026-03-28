@@ -13,12 +13,10 @@ Per la generazione gratuita con Ollama:
 import sys
 import os
 import logging
-from typing import List, Optional
 
 sys.path.insert(0, os.path.dirname(__file__))
 
-from Ingestion import IngestionPipeline, EmbeddingModel, ChromaIndexer
-from Query import QueryProcessor, HybridRetriever, RetrievedChunk, CrossEncoderReranker
+from Ingestion import IngestionPipeline
 
 
 logging.basicConfig(
@@ -29,23 +27,11 @@ logger = logging.getLogger(__name__)
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# GENERATORI DI RISPOSTA
-# ══════════════════════════════════════════════════════════════════════════════
-
-from ollama import OllamaGenerator
-from anthopic import AnthropicGenerator
-
-# ══════════════════════════════════════════════════════════════════════════════
 # QUERY PIPELINE
 # ══════════════════════════════════════════════════════════════════════════════
 
 from Query import QueryPipeline
 
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# ENTRY POINT
-# ══════════════════════════════════════════════════════════════════════════════
 
 def run_ingestion(data_path: str = "./data"):
     """Step 1 — Indicizza i documenti (eseguire solo la prima volta o dopo aggiornamenti)."""
@@ -79,7 +65,7 @@ def run_query_loop():
     )
     # ──────────────────────────────────────────────────────────────────────
 
-    print("\n🔍 RAG Pipeline pronta. Digita 'exit' per uscire.\n")
+    print("\n RAG Pipeline pronta. Digita 'exit' per uscire.\n")
     while True:
         try:
             question = input("Domanda: ").strip()
@@ -93,7 +79,7 @@ def run_query_loop():
             break
 
         answer = pipeline.ask(question, verbose=True)
-        print(f"\n📝 Risposta:\n{answer}\n")
+        print(f"\n Risposta:\n{answer}\n")
         print("─" * 60)
 
 

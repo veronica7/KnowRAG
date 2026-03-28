@@ -1,6 +1,7 @@
 from typing import List
 from abc import abstractmethod
-from Data_Structure import Chunk, Document
+from .document import Document
+from chunk import Chunk
 class BaseChunker:
     """Classe base per chunking strategies"""
 

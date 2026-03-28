@@ -1,4 +1,4 @@
-from .DocumentLoader import DocumentPipeline
+from .DocumentLoader import DocumentLoader
 from .recursiveChunker import RecursiveChunker
 from Data_Structure import BaseChunker, Document, Chunk
 from .embedding import EmbeddingModel
@@ -45,7 +45,7 @@ class IngestionPipeline:
         self.data_path = data_path
  
         # Componenti con default sensati
-        self.document_pipeline = DocumentPipeline(data_path)
+        self.document_pipeline = DocumentLoader(data_path)
         self.chunker = chunker or RecursiveChunker(chunk_size=1000, chunk_overlap=200)
         self.embedding_model = embedding_model or EmbeddingModel()
         self.indexer = ChromaIndexer(
