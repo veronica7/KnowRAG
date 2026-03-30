@@ -1,7 +1,7 @@
 from typing import List
 from abc import abstractmethod
 from .document import Document
-from chunk import Chunk
+from .chunk import Chunk
 class BaseChunker:
     """Classe base per chunking strategies"""
 
@@ -16,6 +16,12 @@ class BaseChunker:
     
     def chunk_document(self, document: Document) -> List[Chunk]:
         """Splitta un Document in una lista di Chunk, preservando i metadati."""
+        if isinstance(document, list):
+            chunks = []
+            for doc in document:
+                chunks.extend(self.chunk_document(doc))
+            return chunks
+
         raw_chunks = self.split_text(document.content)
         chunks = []
         for i, text in enumerate(raw_chunks):

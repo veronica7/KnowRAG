@@ -1,2 +1,5 @@
 \venv
 *.pyc
+*.pdf
+\data
+\chroma_db

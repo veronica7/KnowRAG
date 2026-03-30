@@ -106,7 +106,7 @@ class IngestionPipeline:
  
     def _step_load(self) -> List[Document]:
         logger.info("Caricamento documenti...")
-        documents = self.document_pipeline.load_documents()
+        documents = self.document_pipeline.load_files()
         logger.info(f"  → {len(documents)} documenti caricati")
         return documents
  

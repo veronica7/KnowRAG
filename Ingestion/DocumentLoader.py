@@ -16,8 +16,8 @@ class DocumentLoader:
         self.loader = DocumentParser()
 
     def load_files(self)-> List[Document]:
-        logger.info(f"Avvio caricamento documenti da: {self.data_path}")
-        documents = self.loader.load(self.data_path)
+        logger.info(f"Avvio caricamento documenti da: {self.path}")
+        documents = self.loader.load(self.path)
         logger.info(f"Caricati {len(documents)} documenti totali")
         return documents
     
@@ -54,7 +54,7 @@ class DocumentParser:
         ]
         logger.info(f"Trovati {len(files)} file in {dir_path}")
         for file_path in files:
-            doc = self._load_file(file_path)
+            doc = self.load(file_path)
             if doc:
                 documents.append(doc)
         return documents

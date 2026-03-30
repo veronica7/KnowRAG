@@ -12,7 +12,7 @@ class OllamaGenerator:
     Modelli leggeri consigliati: llama3.2, mistral, phi3
     """
 
-    def __init__(self, model: str = "llama3.2", base_url: str = "http://localhost:11434"):
+    def __init__(self, model: str = "llama3.2", base_url: str = "http://localhost:11434/api/chat"):
         self.model = model
         self.base_url = base_url
 
@@ -23,17 +23,31 @@ class OllamaGenerator:
             raise ImportError("Installa requests: pip install requests")
 
         context = self._build_context(context_chunks)
-        prompt = self._build_prompt(query, context)
-
+        #prompt = self._build_prompt(query, context)
+        messages = [
+        {
+            "role": "system",
+            "content": (
+                "Sei un assistente preciso e utile. "
+                "Rispondi alla domanda basandoti ESCLUSIVAMENTE sul contesto fornito. "
+                "Se il contesto non contiene informazioni sufficienti, dillo esplicitamente."
+            ),
+        },
+        {
+            "role": "user",
+            "content": f"CONTESTO:\n{context}\n\nDOMANDA:\n{query}"
+        }
+    ]
+        
         logger.info(f"Generazione risposta con Ollama ({self.model})...")
         try:
             response = requests.post(
-                f"{self.base_url}/api/generate",
-                json={"model": self.model, "prompt": prompt, "stream": False},
-                timeout=120,
+            self.base_url,  
+            json={"model": self.model, "messages": messages, "stream": False },
+            timeout=120,
             )
             response.raise_for_status()
-            return response.json().get("response", "").strip()
+            return response.json()["message"]["content"].strip()
         except requests.exceptions.ConnectionError:
             return (
                 "[Errore] Ollama non raggiungibile. "
