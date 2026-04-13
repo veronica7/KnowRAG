@@ -21,8 +21,6 @@ class DocumentLoader:
         logger.info(f"Caricati {len(documents)} documenti totali")
         return documents
     
-
-
 class DocumentParser:
     """
     Carica documenti da file PDF, TXT, Markdown e DOCX.

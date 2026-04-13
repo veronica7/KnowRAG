@@ -37,12 +37,12 @@ class EmbeddingModel:
             batch_size=32,
             show_progress_bar=len(texts) > 50,
             convert_to_numpy=True,
-            normalize_embeddings=True,  # utile per similarità coseno
+            normalize_embeddings=True, 
         )
         return embeddings.tolist()
     
     def embed_chunks(self, chunks: List[Chunk]) -> List[Chunk]:
-        """Arricchisce i Chunk con il loro embedding. Modifica in-place e restituisce la lista."""
+        """Arricchisce i Chunk con il loro embedding."""
         texts = [chunk.text for chunk in chunks]
         embeddings = self.embed_texts(texts)
         for chunk, emb in zip(chunks, embeddings):

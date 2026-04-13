@@ -7,9 +7,7 @@ logger = logging.getLogger(__name__)
 
 class OllamaGenerator:
     """
-    Generazione locale e gratuita tramite Ollama.
-    Richiede: pip install requests  +  ollama serve  (in background)
-    Modelli leggeri consigliati: llama3.2, mistral, phi3
+    Generazione locale tramite Ollama.
     """
 
     def __init__(self, model: str = "llama3.2", base_url: str = "http://localhost:11434/api/chat"):

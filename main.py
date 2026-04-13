@@ -17,21 +17,14 @@ import logging
 sys.path.insert(0, os.path.dirname(__file__))
 
 from Ingestion import IngestionPipeline
-
+from Query import QueryPipeline, _load_bm25_corpus, HybridRetriever
+from evaluation import ModelEvaluator
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s [%(levelname)s] %(name)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
-
-
-# ══════════════════════════════════════════════════════════════════════════════
-# QUERY PIPELINE
-# ══════════════════════════════════════════════════════════════════════════════
-
-from Query import QueryPipeline
-
 
 def run_ingestion(data_path: str = "./data"):
     """Step 1 — Indicizza i documenti (eseguire solo la prima volta o dopo aggiornamenti)."""
@@ -58,7 +51,7 @@ def run_query_loop():
 
         # Generazione: Ollama (gratuito) o Anthropic (a pagamento)
         ollama_model="llama3.2",   # scarica con: ollama pull llama3.2
-        use_anthropic=False,       # ← True per usare ANTHROPIC_API_KEY
+        use_anthropic=False,       # True per usare ANTHROPIC_API_KEY
 
         top_k_retrieval=20,        # candidati da vector+BM25
         top_n_rerank=5,            # chunk finali dopo cross-encoder
@@ -82,13 +75,59 @@ def run_query_loop():
         print(f"\n Risposta:\n{answer}\n")
         print("─" * 60)
 
-
+def run_evaluation():
+    logger.info("Avvio valutazione del modello...")
+    
+    pipeline = IngestionPipeline(
+        data_path=DATA_PATH
+    )
+    
+    test_queries = [
+        {
+            "query": "Cos' un tranformers?", 
+            "expected_chunk_id": "doc_1_chunk_0",
+            "query_tokens": ["procedura", "per", "x"]
+        }
+    ]
+    
+    corpus_texts, corpus_ids = _load_bm25_corpus(pipeline.indexer)
+     
+    retriever = HybridRetriever(
+        indexer=pipeline.indexer,
+        embedder=pipeline.embedding_model,
+        bm25_corpus=corpus_texts,
+        bm25_corpus_ids=corpus_ids,
+        top_k=10
+    )
+    
+    evaluator = ModelEvaluator(pipeline=pipeline, retriever=retriever)
+    
+    evaluator.evaluate()
+    
+    metrics = evaluator.run_full_benchmark(
+        data_path=DATA_PATH, 
+        test_queries=test_queries
+    )
+    
+    print("\n" + "="*30)
+    print("RISULTATI BENCHMARK")
+    print("="*30)
+    print(f"Documenti Totali:    {metrics.total_documents}")
+    print(f"Tempo Inserimento:   {metrics.insert_time:.2f}s")
+    print(f"Tempo Ricerca Medio: {metrics.search_time:.4f}s")
+    print(f"Accuratezza Top-1:   {metrics.accuracy_top1:.2%}")
+    print(f"Accuratezza Top-5:   {metrics.accuracy_top5:.2%}")
+    print("="*30)
+    
 if __name__ == "__main__":
-    DATA_PATH = "./data"   # ← cartella con i tuoi documenti
+    DATA_PATH = "./data"  
 
-    # ── STEP 1 (solo la prima volta, o dopo aver aggiunto nuovi documenti)
+    # STEP 1 (solo la prima volta, o dopo aver aggiunto nuovi documenti)
     run_ingestion(DATA_PATH)
 
-    # ── STEP 2 (sempre)
+    # STEP 2 (sempre)
     run_query_loop()
+    
+    # STEP 3 (evaluation)
+    run_evaluation()
 
