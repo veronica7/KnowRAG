@@ -57,17 +57,13 @@ Il reranking è il "collo di bottiglia" qualitativo: riduce il rumore passando a
 
 Per garantire l'affidabilità del sistema, è stata implementata una suite di test basata sulla classe BenchmarkMetrics:
 
-Metrica     ||     Descrizione Tecnica
-
-Insert Time     ||      Tempo totale di esecuzione della IngestionPipeline (caricamento + embedding + indexing).
-
-Search Time     ||      Latenza media della fase di retrieval (Hybrid + Reranking).
-
-Accuracy Top-1      ||      Frequenza con cui il chunk più rilevante (ground truth) appare in prima posizione.
-
-Accuracy Top-5      ||      Frequenza con cui il chunk corretto appare tra i primi 5 risultati.
-
-Total Documents     ||      Dimensione del corpus indicizzato, utile per valutare la scalabilità.
+| Metrica           | Descrizione Tecnica                                                                 |
+|-------------------|--------------------------------------------------------------------------------------|
+| Insert Time       | Tempo totale di esecuzione della IngestionPipeline (caricamento + embedding + indexing). |
+| Search Time       | Latenza media della fase di retrieval (Hybrid + Reranking).                        |
+| Accuracy Top-1    | Frequenza con cui il chunk più rilevante (ground truth) appare in prima posizione. |
+| Accuracy Top-5    | Frequenza con cui il chunk corretto appare tra i primi 5 risultati.               |
+| Total Documents   | Dimensione del corpus indicizzato, utile per valutare la scalabilità.              |
 
 ## 4. Punti di Forza
 
