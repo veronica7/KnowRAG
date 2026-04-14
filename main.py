@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 
 from Ingestion import IngestionPipeline
 from Query import QueryPipeline, _load_bm25_corpus, HybridRetriever
-from evaluation import ModelEvaluator
+from evaluation import Evaluation
 
 logging.basicConfig(
     level=logging.INFO,
@@ -100,9 +100,7 @@ def run_evaluation():
         top_k=10
     )
     
-    evaluator = ModelEvaluator(pipeline=pipeline, retriever=retriever)
-    
-    evaluator.evaluate()
+    evaluator = Evaluation(pipeline=pipeline, retriever=retriever)
     
     metrics = evaluator.run_full_benchmark(
         data_path=DATA_PATH, 
