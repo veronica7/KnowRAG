@@ -35,9 +35,6 @@ L'orchestratore che gestisce il flusso dalla domanda dell'utente alla risposta f
 
 4. Generation: I chunk più rilevanti vengono passati come contesto a un LLM (tramite Ollama o Anthropic) per generare una risposta accurata e fondata sui documenti (grounded).
 
-
-
-
 ## 2. Dettagli Tecnici e Scelte Progettuali
 
 ### Il Modello di Embedding
@@ -81,3 +78,46 @@ Total Documents     ||      Dimensione del corpus indicizzato, utile per valutar
 4. Approccio Data-Driven: La presenza di un modulo di valutazione dimostra un approccio ingegneristico volto all'ottimizzazione continua basata sui dati.
 
 
+## Avvio del server Ollama
+
+Questo progetto utilizza **Ollama** per l'esecuzione locale dei modelli LLM.  
+È necessario che il server Ollama sia attivo prima di avviare l'applicativo.
+
+---
+
+### 1. Installazione
+
+Scaricare e installare Ollama da:
+
+https://ollama.com
+
+Oppure via terminale (Linux/Mac):
+
+ bash 
+curl -fsSL https://ollama.com/install.sh | sh
+
+### 2. Avvio del server
+
+Avviare il server con:
+
+ollama serve
+
+Il server sarà disponibile all'indirizzo:
+
+http://localhost:11434
+
+Nota: se il server è già attivo, il comando restituirà un errore di porta già in uso.
+
+### 3. Download del modello 
+
+Prima di eseguire l'applicativo, assicurarsi di aver scaricato almeno un modello:
+
+ollama pull llama3.2
+
+### 4. Verifica il funzionamento 
+
+Eseguire un test rapido:
+
+ollama run llama3.2
+
+Se il modello risponde correttamente, il sistema è pronto.
